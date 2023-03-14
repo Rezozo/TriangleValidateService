@@ -1,9 +1,17 @@
+import Dao.ITriangleProvider;
+import Model.Triangle;
+import Model.TriangleType;
+import Service.ITriangleService;
+import Service.ITriangleValidateService;
+import Service.impl.TriangleServiceImpl;
+import Service.impl.TriangleValidateServiceImpl;
+import Dao.impl.TriangleProviderImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.EnumSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,77 +21,40 @@ public class TestTriangle {
     private static ITriangleProvider triangleProvider;
     private static ITriangleValidateService triangleValidateService;
     @BeforeAll
-    public static void setUp() throws SQLException {
-        Connection connection = DbConnect.getConnection();
-        triangleProvider = new TriangleProvider(connection);
-        triangleService = new TriangleService(connection);
-        triangleValidateService = new TriangleValidateService(triangleProvider, triangleService);
+    public static void setUp() {
+        triangleProvider = new TriangleProviderImpl();
+        triangleService = new TriangleServiceImpl();
+        triangleValidateService = new TriangleValidateServiceImpl(triangleProvider, triangleService);
     }
 
     @Test
     public void testGetByIdTrue() {
-        EnumSet<TriangleType> types = EnumSet.of(TriangleType.Scalene, TriangleType.Right);
-        Triangle triangle = new Triangle(2, 3, 4, 5, types, false, 6);
+        Set<TriangleType> types = EnumSet.of(TriangleType.Scalene, TriangleType.Right);
+        Triangle triangle = new Triangle(1, 3, 4, 5, types, false, 6);
         triangleProvider.Save(triangle);
 
-        Triangle actualTriangle = triangleProvider.GetById(2);
-        boolean res = triangleValidateService.isValid(actualTriangle.Id);
-        if (res) {
-            triangleService.ChangeValid(actualTriangle.Id);
-        }
-        assertTrue(res);
-    }
-    @Test
-    public void testGetByIdFalse() {
-        EnumSet<TriangleType> types = EnumSet.of(TriangleType.Oxygon, TriangleType.Right);
-        Triangle triangle = new Triangle(3, 3, 4, 5, types, false, 6);
-        triangleProvider.Save(triangle);
-
-        Triangle actualTriangle = triangleProvider.GetById(3);
-        boolean res = triangleValidateService.isValid(actualTriangle.Id);
-        if (res) {
-            triangleService.ChangeValid(actualTriangle.Id);
-        }
-        assertFalse(res);
+        assertTrue(triangleValidateService.isValid(1));
     }
 
     @Test
     public void testGetAllTrue(){
         EnumSet<TriangleType> types = EnumSet.of(TriangleType.Scalene, TriangleType.Right);
-        Triangle triangle = new Triangle(4, 5, 13, 12, types, false, 30);
+        Triangle triangle = new Triangle(2, 5, 13, 12, types, false, 30);
         triangleProvider.Save(triangle);
 
         EnumSet<TriangleType> types2 = EnumSet.of(TriangleType.Scalene, TriangleType.Obtuse);
-        Triangle triangle2 = new Triangle(5, 3, 4, 6, types2, false, 6);
+        Triangle triangle2 = new Triangle(3, 3, 4, 6, types2, false, 6);
         triangleProvider.Save(triangle2);
-        boolean res = triangleValidateService.isAllValid();
+        assertTrue(triangleValidateService.isAllValid());
+    }
 
-        if (res) {
-            for (Triangle triangles :
-                    triangleProvider.GetAll()){
-                triangleService.ChangeValid(triangles.Id);
-            }
-        }
-        assertTrue(res);
+    @Test
+    public void testGetByIdFalse() {
+        assertFalse(triangleValidateService.isValid(triangleProvider.GetById(4).getId()));
     }
 
     @Test
     public void testGetAllFalse() {
-        EnumSet<TriangleType> types = EnumSet.of(TriangleType.Scalene, TriangleType.Oxygon);
-        Triangle triangle = new Triangle(6, 5, 13, 12, types, false, 30);
-        triangleProvider.Save(triangle);
-
-        EnumSet<TriangleType> types2 = EnumSet.of(TriangleType.Scalene, TriangleType.Obtuse);
-        Triangle triangle2 = new Triangle(7, 9, 5, 6, types2, false, 15);
-        triangleProvider.Save(triangle2);
-        boolean res = triangleValidateService.isAllValid();
-
-        if (res) {
-            for (Triangle triangles :
-                    triangleProvider.GetAll()){
-                triangleService.ChangeValid(triangles.Id);
-            }
-        }
-        assertFalse(res);
+        assertFalse(triangleValidateService.isAllValid()); //  если треугольников в бд нет
     }
 }

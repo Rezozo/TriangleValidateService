@@ -1,3 +1,5 @@
+package Model;
+
 public enum TriangleType {
     Oxygon(1),
     Obtuse(2),

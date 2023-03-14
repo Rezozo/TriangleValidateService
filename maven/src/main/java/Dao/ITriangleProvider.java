@@ -1,3 +1,7 @@
+package Dao;
+
+import Model.Triangle;
+
 import java.util.List;
 
 public interface ITriangleProvider {
