@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import javax.persistence.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,42 +10,42 @@ import java.util.Set;
 public class Triangle {
     @Id
     @Column(name = "id")
-    private long Id;
+    private long id;
     @Column (name = "a")
-    private double A;
+    private double a;
     @Column (name = "b")
-    private  double B;
+    private  double b;
     @Column (name = "c")
-    private double C;
+    private double c;
     @Column(name = "type")
-    private String Types;
+    private String types;
     @Column (name = "isvalidtriangle")
     private boolean isValidTriangle;
     @Column (name = "area")
-    private double Area;
+    private double area;
 
     public Triangle() { }
-    public Triangle(long Id, double A, double B, double C, Set<TriangleType> types, boolean isValidTriangle, double Area) {
-        this.Id = Id;
-        this.A = A;
-        this.B = B;
-        this.C = C;
-        this.Types = serializeTypes(types);
+    public Triangle(long id, double a, double b, double c, Set<TriangleType> types, boolean isValidTriangle, double area) {
+        this.id = id;
+        this.a = a;
+        this.b = b;
+        this.c = c;
+        this.types = serializeTypes(types);
         this.isValidTriangle = isValidTriangle;
-        this.Area = Area;
+        this.area = area;
     }
 
     public long getId() {
-        return Id;
+        return id;
     }
     public double getA() {
-        return A;
+        return a;
     }
     public double getB() {
-        return B;
+        return b;
     }
     public double getC() {
-        return C;
+        return c;
     }
 
     public boolean getValid() {
@@ -53,13 +53,13 @@ public class Triangle {
     }
 
     public double getArea() {
-        return Area;
+        return area;
     }
 
     public Set<TriangleType> getTypes() {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(this.Types, Set.class);
+            return mapper.readValue(this.types, Set.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

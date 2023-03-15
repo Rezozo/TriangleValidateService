@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 public enum TriangleType {
     Oxygon(1),
