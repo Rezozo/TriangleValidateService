@@ -1,6 +1,6 @@
 package model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Set;

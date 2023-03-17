@@ -6,7 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import utils.HibernateSessionFactoryUtil;
 
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 import java.util.List;
 
 public class TriangleDaoImpl implements TriangleDao {
@@ -16,12 +16,12 @@ public class TriangleDaoImpl implements TriangleDao {
                 .getResultList();
     }
     public Triangle selectById(long id) {
-        return HibernateSessionFactoryUtil.getSessionFactory().openSession().get(Triangle.class, id);
+        return HibernateSessionFactoryUtil.getSessionFactory().openSession().find(Triangle.class, id);
     }
 
     public Triangle selectBySides(double a, double b, double c) {
         String hql = "FROM Triangle T WHERE T.a = :a AND T.b = :b AND T.c = :c";
-        Query query = HibernateSessionFactoryUtil.getSessionFactory().openSession().createQuery(hql);
+        Query query = (Query) HibernateSessionFactoryUtil.getSessionFactory().openSession().createQuery(hql);
         query.setParameter("a", a);
         query.setParameter("b", b);
         query.setParameter("c", c);
@@ -31,7 +31,7 @@ public class TriangleDaoImpl implements TriangleDao {
     public void save(Triangle triangle) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Transaction tx1 = session.beginTransaction();
-        session.save(triangle);
+        session.persist(triangle);
         tx1.commit();
         session.close();
     }

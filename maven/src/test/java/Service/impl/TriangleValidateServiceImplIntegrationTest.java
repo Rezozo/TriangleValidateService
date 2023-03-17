@@ -28,9 +28,7 @@ public class TriangleValidateServiceImplIntegrationTest {
         triangleProvider = new TriangleProviderImpl(triangleDao);
         triangleService = new TriangleServiceImpl(triangleDao);
         triangleValidateService = new TriangleValidateServiceImpl(triangleProvider, triangleService);
-    }
-
-    @Test
+    }@Test
     public void testGetByIdTrue() {
         Set<TriangleType> types = EnumSet.of(TriangleType.Scalene, TriangleType.Right);
         Triangle triangle = new Triangle(1, 3, 4, 5, types, true, 6);
@@ -60,4 +58,6 @@ public class TriangleValidateServiceImplIntegrationTest {
     public void testGetAllFalse() {
         assertFalse(triangleValidateService.isAllValid()); //  если треугольников в бд нет
     }
+
+
 }
