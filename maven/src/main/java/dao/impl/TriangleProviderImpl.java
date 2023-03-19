@@ -1,23 +1,28 @@
 package dao.impl;
 
-import dao.TriangleDao;
 import dao.TriangleProvider;
+import repository.TriangleRepository;
 import model.Triangle;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class TriangleProviderImpl implements TriangleProvider {
-    private final TriangleDao triangleDao;
-    public TriangleProviderImpl(TriangleDao triangleDao) {
-        this.triangleDao = triangleDao;
+    private  TriangleRepository triangleRepository;
+    @Autowired
+    public TriangleProviderImpl(TriangleRepository triangleRepository) {
+        this.triangleRepository = triangleRepository;
     }
-    public Triangle getById(long id) {
-        return triangleDao.selectById(id);
+    public Triangle getById(Long id) {
+        return triangleRepository.findById(id).get();
     }
     public List<Triangle> getAll() {
-        return triangleDao.selectAll();
+        return (List<Triangle>) triangleRepository.findAll();
+    }
+    public Triangle getBySides(double a, double b, double c) {
+        return triangleRepository.findByAAndBAndC(a, b, c);
     }
     public void save(Triangle triangle) {
-        triangleDao.save(triangle);
+        triangleRepository.save(triangle);
     }
 }

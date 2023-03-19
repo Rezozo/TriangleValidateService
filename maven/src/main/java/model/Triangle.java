@@ -10,7 +10,7 @@ import java.util.Set;
 public class Triangle {
     @Id
     @Column(name = "id")
-    private long id;
+    private Long id;
     @Column (name = "a")
     private double a;
     @Column (name = "b")
@@ -25,7 +25,7 @@ public class Triangle {
     private double area;
 
     public Triangle() { }
-    public Triangle(long id, double a, double b, double c, Set<TriangleType> types, boolean isValidTriangle, double area) {
+    public Triangle(Long id, double a, double b, double c, Set<TriangleType> types, boolean isValidTriangle, double area) {
         this.id = id;
         this.a = a;
         this.b = b;
@@ -35,7 +35,7 @@ public class Triangle {
         this.area = area;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
     public double getA() {

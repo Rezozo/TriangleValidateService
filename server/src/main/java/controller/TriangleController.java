@@ -1,7 +1,7 @@
 package controller;
 
-import dao.TriangleDao;
 import dao.TriangleProvider;
+import lombok.SneakyThrows;
 import model.Triangle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,17 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import service.TriangleValidateService;
 
+
 @RestController
-public class TriangleController {
+public class TriangleController{
     private TriangleValidateService validateService;
     private TriangleProvider provider;
-    private TriangleDao triangleDao;
     @Autowired
-    public TriangleController(TriangleValidateService validateService, TriangleProvider provider, TriangleDao triangleDao)
+    public TriangleController(TriangleValidateService validateService, TriangleProvider provider)
     {
         this.validateService = validateService;
         this.provider = provider;
-        this.triangleDao = triangleDao;
     }
 
     @RequestMapping("/errorPage")
@@ -32,25 +31,17 @@ public class TriangleController {
 
     @RequestMapping("/triangle/validateAll")
     public boolean validateAll() {
-        if (validateService.isAllValid()) {
-            return true;
+        return validateService.isAllValid();
+    }
+
+    @RequestMapping("/triangle/validate")
+    @SneakyThrows
+    public boolean validateOne(@RequestParam("a") double a, @RequestParam("b") double b, @RequestParam("c") double c) {
+        Triangle triangle = provider.getBySides(a, b, c);
+        if (triangle != null) {
+            return validateService.isValid(triangle.getId());
         } else {
             return false;
         }
     }
-
-    @RequestMapping("/triangle/validate")
-    public boolean validateOne(@RequestParam("a") double a, @RequestParam("b") double b, @RequestParam("c") double c) {
-        try {
-            Triangle triangle = triangleDao.selectBySides(a, b, c);
-            if (validateService.isValid(triangle.getId())) {
-                return true;
-            }
-        } catch (Error error) {
-            return false;
-        }
-        return false;
-    }
-
-
 }

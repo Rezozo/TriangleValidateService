@@ -20,7 +20,7 @@ public class TriangleValidateServiceImpl implements TriangleValidateService {
 
     private boolean isValidTriangle(Triangle triangle) {
         boolean isValid = true;
-        if (!triangleService.isValidTriangle(triangle.getA(), triangle.getB(), triangle.getC())) {
+        if (!triangleService.isValidTriangle(triangle.getId())) {
             isValid = false;
         }
 
@@ -32,7 +32,6 @@ public class TriangleValidateServiceImpl implements TriangleValidateService {
         if (!types.equals(triangle.getTypes())) {
             isValid = false;
         }
-
         return isValid;
     }
 
@@ -50,9 +49,8 @@ public class TriangleValidateServiceImpl implements TriangleValidateService {
         return isAllValid;
     }
 
-    public boolean isValid(long id) {
+    public boolean isValid(Long id) {
         Triangle triangle = triangleProvider.getById(id);
-        boolean isValid = isValidTriangle(triangle);
-        return isValid;
+        return isValidTriangle(triangle);
     }
 }

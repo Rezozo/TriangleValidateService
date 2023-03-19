@@ -1,6 +1,6 @@
 package service.impl;
 
-import dao.TriangleDao;
+import dao.TriangleProvider;
 import model.Triangle;
 import model.TriangleType;
 import service.TriangleService;
@@ -9,37 +9,35 @@ import java.util.EnumSet;
 import java.util.Set;
 
 public class TriangleServiceImpl implements TriangleService {
-    private final TriangleDao triangleDao;
-    public TriangleServiceImpl(TriangleDao triangleDao) {
-        this.triangleDao = triangleDao;
+    private final TriangleProvider triangleProvider;
+    public TriangleServiceImpl(TriangleProvider triangleProvider) {
+        this.triangleProvider = triangleProvider;
     }
-    public boolean isValidTriangle(double a, double b, double c) {
-        Triangle triangle = triangleDao.selectBySides(a, b, c);
+    public boolean isValidTriangle(Long id) {
+        Triangle triangle = triangleProvider.getById(id);
         if (triangle == null) return false;
         else return true;
     }
 
     public Set<TriangleType> getType(double a, double b, double c) {
         try {
-            Triangle triangle = triangleDao.selectBySides(a, b, c);
-            Set<TriangleType> type = triangle.getTypes();
-            return type;
+            Triangle triangle = triangleProvider.getBySides(a, b, c);
+            return triangle.getTypes();
         } catch (Error error) {
-            throw new Error("Model.Triangle with sides " + a + ", " + b + ", " + c + " was not found.");
+            throw new Error();
         }
     }
 
     public double getArea(double a, double b, double c) {
         try {
-            Triangle triangle = triangleDao.selectBySides(a, b, c);
+            Triangle triangle = triangleProvider.getBySides(a, b, c);
             return triangle.getArea();
         } catch(Error error) {
-            throw new Error("Model.Triangle with sides " + a + ", " + b + ", " + c + " was not found.");
+            throw new Error();
         }
     }
 
-    public void save(long Id, double A, double B, double C, EnumSet<TriangleType> Type, boolean isValidTriangle, double Area) {
-        Triangle triangle = new Triangle(Id, A, B, C, Type, isValidTriangle, Area);
-        triangleDao.save(triangle);
+    public void save(Long Id, double a, double b, double c, EnumSet<TriangleType> Type, boolean isValidTriangle, double Area) {
+        triangleProvider.save(new Triangle(Id, a, b, c, Type, isValidTriangle, Area));
     }
 }
