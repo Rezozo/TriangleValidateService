@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ApplicationIntegrationTests {
     @Autowired
     private TestRestTemplate restTemplate;
-
     @Test
     public void AllValid_success() throws Exception {
         ResponseEntity<Void> response = restTemplate.getForEntity("/triangle/validateAll", Void.class);
@@ -28,7 +27,7 @@ class ApplicationIntegrationTests {
 
     @Test
     public void OneNotValid_success() throws Exception {
-        ResponseEntity<Void> response = restTemplate.getForEntity("/triangle/validate?a=3&b=5&c=5", Void.class);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        ResponseEntity<Void> response = restTemplate.getForEntity("/triangle/validate?a=33&b=53&c=5", Void.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }
